@@ -1,31 +1,29 @@
-vpath %.cpp Furnace
-SOURCES=Furnace.cpp CEntity.cpp \
-		CEvent.cpp CSurface.cpp \
-		CAnimation.cpp CTile.cpp \
-		CMap.cpp CArea.cpp \
-		CCamera.cpp
-OBJECTS=$(patsubst %.cpp, Furnace/obj/%.o, $(SOURCES))
-CPPFLAGS=-Wall -g `sdl-config --cflags` -Wno-write-strings
-LDFLAGS=`sdl-config --libs` -lSDL -lSDL_image
+vpath %.c src
+SOURCES=main.c 
+
+OBJECTS=$(patsubst %.c, src/obj/%.o, $(SOURCES))
+CPPFLAGS=-Wall -g `sdl2-config --cflags --libs` -lSDL2 -Wno-write-strings
+CXX=g++
+CC=gcc
 
 All: Furnace.bin
 
 Furnace.bin: $(OBJECTS) 
-	$(CXX) -o $@ $(OBJECTS) $(LDFLAGS) $(CPPFLAGS) 
+	$(CC) -o $@ $(OBJECTS) $(CPPFLAGS) 
 
-$(OBJECTS): | Furnace/obj
+$(OBJECTS): | src/obj
 
-Furnace/obj:
+src/obj:
 	@mkdir -p $@
 
-Furnace/obj/%.o: %.cpp
-	$(CXX) $(LDFLAGS) $(CPPFLAGS) -c $< -o $@ 
+src/obj/%.o: %.c
+	$(CC) $(CPPFLAGS) -c $< -o $@ 
 
 
 # cleanup
 clean:
 	rm -rf $(OBJECTS)
 	rm -rf Furnace.bin
-	rmdir Furnace/obj
+	rmdir src/obj
 
 # EOF
